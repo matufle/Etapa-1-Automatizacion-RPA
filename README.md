@@ -65,4 +65,4 @@ Si no, andá primero al [instructivo de instalación](docs/instructivo-instalaci
 
 Barreto Martin · Carmona Julian · Casagrande Joaquin · Flegler Mateo · Graciani Juan Pablo · Joannas Damián
 
-Docentes: Ulises Rapallini y Ernesto Ledesma.
+Docentes: JAIME ELIEZER PIPERNO SZTERNFELD  y MAURO SANDER DIMURO.
