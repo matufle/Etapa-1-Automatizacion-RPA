@@ -1,0 +1,12 @@
+# Credenciales reales del bot de Telegram. NO subir.
+# La plantilla versionada es config.ejemplo.txt
+config.txt
+
+# Se regenera en cada corrida (queda como evidencia local del ultimo envio)
+mensaje.txt
+
+# Archivos temporales que genera TagUI al ejecutar un flujo
+*.js
+*.raw
+*.log
+*.cmd.log
