@@ -1,64 +1,78 @@
 # Bot de compras de supermercado — TPI RPA Grupo 13
 
-Automatización RPA hecha con **TagUI** para la materia Tecnologías para la Automatización
-(UTN FRCU, Ingeniería en Sistemas de Información, 2026).
+Automatización RPA hecha en **Python con la librería `rpa`** (RPA for Python, que por
+dentro usa **TagUI**) para la materia Tecnologías para la Automatización (UTN FRCU,
+Ingeniería en Sistemas de Información, 2026).
 
-El bot te pregunta qué querés cocinar, busca los ingredientes en una base de recetas,
-les descuenta lo que ya tenés en la alacena y te manda por Telegram la lista de lo que
-falta comprar.
+Le pedís al bot de Telegram qué querés cocinar. El proceso local calcula qué falta
+comprar a partir de las recetas y de lo que hay en la alacena, y después **el robot hace
+lo que haría una persona**: abre Chrome, entra a Telegram Web, busca el grupo y le
+escribe la lista.
 
 ## Cómo funciona
 
 ```mermaid
 flowchart TD
-    A["Elegís qué cocinar<br/>(1 comida / varias / la semana entera)"] --> B["BaseDatos.csv<br/>¿qué ingredientes lleva cada comida?"]
-    B --> C["Suma las cantidades<br/>(si una comida se repite, se acumula)"]
+    A["En Telegram: /start y elegís con botones<br/>(1 comida / varias / la semana entera)<br/>también: ver y cargar recetas, editar el menú, actualizar la alacena"] --> B["bot.py en la PC<br/>recibe el pedido (disparador)"]
+    B --> C["BaseDatos.csv<br/>¿qué ingredientes lleva cada comida?"]
     C --> D["StockActual.csv<br/>resta lo que ya tenés en casa"]
     D --> E["Lista de lo que falta comprar"]
-    E --> F["Se envía por Telegram"]
+    E --> F["El robot abre Chrome → Telegram Web →<br/>busca el grupo → escribe y envía la lista"]
+    F --> G["El bot confirma con una captura de pantalla"]
+    F -. "si el robot falla" .-> H["El bot manda la lista él mismo"]
 ```
+
+El bot de Telegram es solo el **disparador**; la parte RPA es el proceso local que
+interactúa con la máquina como un usuario (lee los CSV y maneja el navegador).
 
 ## Arranque rápido
 
-Esto asume que TagUI ya está instalado y que tenés un bot de Telegram creado.
-Si no, andá primero al [instructivo de instalación](docs/instructivo-instalacion.md).
+Esto asume que ya instalaste Python y las librerías, creaste el bot y el grupo, e
+iniciaste sesión en Telegram Web. Si no, andá primero al
+[instructivo de instalación](docs/instructivo-instalacion.md).
 
-1. Copiá `config.ejemplo.txt` como `config.txt` y completalo con tu token y tu chat_id.
-2. Verificá que el token ande (esto **no** le manda un mensaje a nadie):
+1. Copiá `config.ejemplo.txt` como `config.txt` y completalo (token, chat_id y nombre
+   del grupo).
+2. Verificá que el token ande (esto **no** le manda un mensaje a nadie), parado en
+   `Ejecutables`:
    ```
-   tagui pruebas/prueba_conexion.tag -n
+   py prueba_conexion.py
    ```
-3. Corré el bot:
-   - **Windows:** doble click en `Ejecutables\compras.cmd`
-   - **Linux / macOS:** `./Ejecutables/compras.sh`
+3. Prendé el bot:
+   - **Windows:** doble click en `Ejecutables\iniciar_bot.cmd`
+   - **Linux / macOS:** `./Ejecutables/iniciar_bot.sh`
+4. En Telegram, mandale `/start` al bot.
 
-> **El flag `-n` es obligatorio** cuando ejecutás a mano. Sin él, TagUI abre Chrome y
-> las preguntas salen en un popup del navegador en vez de la consola. Los lanzadores
-> `.cmd` y `.sh` ya lo incluyen, por eso conviene usarlos.
+> **La PC tiene que quedar prendida y desbloqueada** mientras el bot atiende: el robot
+> maneja Chrome en la pantalla, y con la sesión bloqueada Chrome no dibuja las páginas.
 
 ## Qué es cada archivo
 
 | Archivo | Qué es |
 |---|---|
-| `Ejecutables/compras.tag` | **El programa.** Es el único archivo con la lógica: pregunta, calcula y envía. Está escrito en el lenguaje de TagUI y comentado paso por paso. |
-| `Ejecutables/compras.cmd` | Atajo para **Windows**. Son 4 líneas que llaman a `compras.tag` con el flag `-n`. Existe para poder correrlo con doble click y no tener que acordarse del flag. |
-| `Ejecutables/compras.sh` | Lo mismo que el `.cmd` pero para **Linux/macOS**. Hacen falta los dos archivos porque Windows y Linux usan formatos de script distintos (`.cmd` para el CMD de Windows, `.sh` para el shell de Unix). Ninguno de los dos tiene lógica: los dos hacen lo mismo, solo cambia el idioma. |
-| `pruebas/prueba_conexion.tag` | Verifica que el token de `config.txt` sea válido, **sin enviarle un mensaje a nadie**. Es la primera prueba a correr cuando algo no anda. |
-| `pruebas/prueba_telegram.tag` | Manda un mensaje suelto. Te pregunta a qué chat_id y qué texto, así podés probar contra un grupo sin tocar `config.txt` ni el programa principal. |
-| `data/BaseDatos.csv` | Las recetas: qué ingredientes y qué cantidad lleva cada comida. |
-| `data/Menu.csv` | El menú de la semana (qué se come cada día). Lo usa la opción 3. |
-| `data/StockActual.csv` | Lo que ya hay en la alacena, para descontarlo. |
-| `config.txt` | Tu token y tu chat_id de Telegram. **No se sube al repositorio** (está en `.gitignore`): cada integrante del grupo se arma el suyo. |
+| `Ejecutables/bot.py` | **El programa principal.** Escucha a Telegram, muestra los botones, dispara el cálculo y el robot, y responde cómo salió. |
+| `Ejecutables/compras.py` | El cálculo: lee los CSV, suma los ingredientes de las comidas elegidas y descuenta el stock. |
+| `Ejecutables/robot_telegram_web.py` | **La parte RPA.** Maneja Chrome con la librería `rpa`: abre Telegram Web, busca el grupo y escribe la lista. También sirve para iniciar sesión y para probar a mano. |
+| `Ejecutables/configuracion.py` | Lee `config.txt`. |
+| `Ejecutables/prueba_conexion.py` | Verifica que el token de `config.txt` sea válido, **sin enviarle un mensaje a nadie**. Es la primera prueba a correr cuando algo no anda. |
+| `Ejecutables/iniciar_bot.cmd` | Atajo para **Windows**: prende el bot con doble click. |
+| `Ejecutables/iniciar_bot.sh` | Lo mismo para **Linux/macOS**. Hacen falta los dos porque Windows y Linux usan formatos de script distintos. |
+| `requirements.txt` | Las librerías de Python que hay que instalar (`rpa` y `requests`). |
+| `data/BaseDatos.csv` | Las recetas: qué ingredientes y qué cantidad lleva cada comida. Se pueden agregar desde el bot (➕ Cargar receta). |
+| `data/Menu.csv` | El menú de la semana (qué se come cada día). Lo usa el botón "Menú de la semana", que también permite cambiarlo o sortear uno nuevo. |
+| `data/StockActual.csv` | Lo que ya hay en la alacena, para descontarlo. Lo actualiza la persona desde el bot (🥫 Mi alacena). |
+| `config.txt` | Tu token, tu chat_id y el nombre del grupo. **No se sube al repositorio** (está en `.gitignore`): cada integrante del grupo se arma el suyo. |
 | `config.ejemplo.txt` | La plantilla de `config.txt`, con las instrucciones adentro. Esta sí se sube. |
-| `mensaje.txt` | Se regenera solo en cada corrida, con la última lista enviada. Queda como evidencia local. |
+| `mensaje.txt` / `captura.png` | Se regeneran solos en cada pedido: la última lista y la captura de Telegram Web. Quedan como evidencia local. |
+| `version-1-tagui/` | La **primera versión** del proyecto, escrita directamente en TagUI (menú por consola y envío por la Bot API). Queda como registro para la cronología de la exposición. |
 | `docs/evidencia/` | Material del intento fallido por WhatsApp y capturas de errores, guardado para la exposición. |
 
 ## Documentación
 
 | Documento | Para qué |
 |---|---|
-| [Instructivo de instalación](docs/instructivo-instalacion.md) | Poner esto a andar desde cero: instalar TagUI (Windows y Linux), crear el bot de Telegram, armar `config.txt`. |
-| [Instructivo de uso](docs/instructivo-uso.md) | Usarlo en el día a día: las 3 opciones del menú, cómo cargar tus propias comidas, qué hacer cuando algo falla. |
+| [Instructivo de instalación](docs/instructivo-instalacion.md) | Poner esto a andar desde cero: Python, Chrome, librerías, bot de Telegram, grupo, `config.txt` e inicio de sesión en Telegram Web. |
+| [Instructivo de uso](docs/instructivo-uso.md) | Usarlo en el día a día: los botones, cómo cargar tus propias comidas, qué hacer cuando algo falla. |
 | [Contexto del proyecto](contexto.md) | El estado del trabajo: qué decisiones se tomaron y por qué, qué contratiempos hubo, qué falta hacer. Es el documento para retomar el proyecto. |
 
 ## Grupo 13

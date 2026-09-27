@@ -2,11 +2,16 @@
 # La plantilla versionada es config.ejemplo.txt
 config.txt
 
-# Se regenera en cada corrida (queda como evidencia local del ultimo envio)
+# Se regeneran en cada corrida (quedan como evidencia local del ultimo envio)
 mensaje.txt
+captura.png
 
 # Archivos temporales que genera TagUI al ejecutar un flujo
 *.js
 *.raw
 *.log
 *.cmd.log
+rpa_python*
+
+# Python
+__pycache__/

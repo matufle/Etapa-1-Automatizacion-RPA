@@ -9,6 +9,12 @@
 #                       https://api.telegram.org/bot<TOKEN>/getUpdates
 #                       el numero esta en result[0].message.chat.id
 #                       (para un GRUPO el id es negativo, ej: -1001234567890)
+#                       Es el chat desde donde se le hacen los pedidos al bot:
+#                       el bot ignora a cualquier otro chat.
+#   GRUPO_TELEGRAM   -> el nombre del grupo, tal cual se ve en Telegram. El robot
+#                       lo escribe en el buscador de Telegram Web para abrirlo y
+#                       mandarle la lista. Puede ser el mismo chat del TELEGRAM_CHAT_ID.
 
 TELEGRAM_TOKEN=1234567890:AAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TELEGRAM_CHAT_ID=1234567890
+GRUPO_TELEGRAM=Lista de Compras

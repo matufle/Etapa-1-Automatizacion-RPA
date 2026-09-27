@@ -9,78 +9,56 @@ Para usarlo una vez instalado, ver el [instructivo de uso](instructivo-uso.md).
 
 ## Qué vas a necesitar
 
-1. **TagUI** — la herramienta de RPA que ejecuta el programa.
-2. **Un bot de Telegram** — con su token y el chat_id a dónde mandar los mensajes.
-3. **Este repositorio** descargado.
+1. **Python 3** — el lenguaje en el que está escrito el bot.
+2. **Google Chrome** — el navegador que maneja el robot.
+3. **La librería `rpa`** (RPA for Python) — la herramienta de RPA. Por dentro usa
+   **TagUI**, que se descarga sola la primera vez.
+4. **Un bot de Telegram** — con su token.
+5. **Una cuenta de Telegram** y **un grupo** donde el robot va a escribir la lista.
+6. **Este repositorio** descargado.
 
 No hace falta instalar Microsoft Excel ni ningún otro programa: los datos se leen de
 archivos `.csv` como texto plano, justamente para que funcione igual en cualquier sistema.
 
 ---
 
-## Paso 1 — Instalar TagUI
+## Paso 1 — Instalar Python, Chrome y las librerías
 
 ### Windows
 
-1. Descargá TagUI desde las releases oficiales:
-   https://github.com/aisingapore/TagUI/releases
-   (el archivo para Windows, `TagUI_Windows.zip`)
-2. Descomprimilo en `C:\tagui`.
-   Te tiene que quedar existiendo la carpeta `C:\tagui\src`.
-3. Agregá `C:\tagui\src` al **PATH** del sistema, para poder escribir `tagui` desde
-   cualquier carpeta:
-   - Menú Inicio → "Editar las variables de entorno del sistema"
-   - Botón *Variables de entorno* → en *Variables del sistema*, seleccioná `Path` → *Editar*
-   - *Nuevo* → pegá `C:\tagui\src` → Aceptar en todas las ventanas
-   - **Cerrá y volvé a abrir la terminal** para que tome el cambio.
-4. Verificá que quedó bien. Abrí una terminal nueva y escribí:
+1. Instalá Python 3 desde https://www.python.org/downloads/ . En la primera pantalla
+   del instalador **tildá "Add python.exe to PATH"**.
+2. Verificá en una terminal nueva:
    ```
-   tagui
+   py --version
    ```
-   Tiene que responder con la ayuda de TagUI. Si dice "no se reconoce el comando",
-   el PATH no quedó bien cargado.
+   (Windows trae el lanzador `py`. Si no lo tenés, probá `python --version`.)
+3. Instalá Google Chrome si no lo tenés: https://www.google.com/chrome/
+4. Parado en la carpeta raíz del proyecto, instalá las librerías:
+   ```
+   py -m pip install -r requirements.txt
+   ```
 
-> **PHP en Windows:** no hace falta instalarlo. TagUI trae su propia copia adentro
-> (`C:\tagui\src\php\php.exe`) y la usa automáticamente.
+> **PHP en Windows:** no hace falta instalarlo. El TagUI que descarga la librería trae su
+> propia copia adentro y la usa automáticamente.
 
 ### Linux
 
-1. **Instalá PHP primero.** En Linux, a diferencia de Windows, TagUI **no** trae PHP
-   incluido: lo busca en el sistema. Si falta, TagUI falla con errores confusos.
+1. Instalá Python, pip y **PHP**. En Linux, a diferencia de Windows, TagUI **no** trae
+   PHP incluido: lo busca en el sistema, y si falta falla con errores confusos.
    ```bash
-   sudo apt update && sudo apt install php-cli
+   sudo apt update && sudo apt install python3 python3-pip php-cli
    ```
-   (en Fedora/RHEL: `sudo dnf install php-cli`)
-
-   Verificá con:
+   (en Fedora/RHEL: `sudo dnf install python3 python3-pip php-cli`)
+2. Instalá Google Chrome (el paquete `.deb` de https://www.google.com/chrome/ ).
+3. Parado en la carpeta raíz del proyecto:
    ```bash
-   php --version
-   ```
-
-2. Descargá y descomprimí TagUI:
-   ```bash
-   cd ~
-   wget https://github.com/aisingapore/TagUI/releases/latest/download/TagUI_Linux.zip
-   unzip TagUI_Linux.zip
-   ```
-   Te tiene que quedar la carpeta `~/tagui/src`.
-
-3. Agregá TagUI al PATH:
-   ```bash
-   echo 'export PATH=$PATH:~/tagui/src' >> ~/.bashrc
-   source ~/.bashrc
-   ```
-
-4. Verificá:
-   ```bash
-   tagui
+   python3 -m pip install -r requirements.txt
    ```
 
 > **Nota honesta:** la instalación en Linux **todavía no se probó** en este proyecto
-> (está pendiente como ítem 7 del checklist en [`contexto.md`](../contexto.md)). Los pasos son los del
-> procedimiento oficial de TagUI más el requisito de PHP, que sí está confirmado leyendo
-> el código del launcher. Si al correrlo aparecen errores de PhantomJS relacionados a
-> librerías gráficas, puede llegar a hacer falta `sudo apt install libfontconfig1`.
+> (está pendiente en el checklist de [`contexto.md`](../contexto.md)). Los pasos salen de
+> la documentación de la librería `rpa`, que avisa que en Linux hace falta PHP.
 > **Cuando alguien lo pruebe en Linux, actualizar esta sección con lo que realmente pasó.**
 
 ---
@@ -106,12 +84,10 @@ archivos `.csv` como texto plano, justamente para que funcione igual en cualquie
 
 ### 2.2 — Obtener el CHAT_ID
 
-El chat_id es a dónde el bot va a mandar los mensajes.
+El chat_id es **el chat desde donde le vas a hacer los pedidos al bot**. El bot ignora
+cualquier otro chat: si no, cualquiera que encontrara el bot podría manejar tu PC.
 
-**Importante:** un bot de Telegram **no puede escribirte primero**. Tenés que hablarle
-vos antes, o el envío va a fallar con `chat not found`.
-
-**Para mandarte los mensajes a vos mismo:**
+Lo más simple es usar tu chat privado con el bot:
 
 1. Buscá tu bot en Telegram por el username que le pusiste y mandale cualquier mensaje
    (por ejemplo `hola`).
@@ -121,25 +97,25 @@ vos antes, o el envío va a fallar con `chat not found`.
    ```
 3. Vas a ver un texto en formato JSON. Buscá `"chat":{"id":` — ese número es tu chat_id.
 
-**Para mandarlos a un grupo:**
-
-1. Agregá el bot al grupo.
-2. Escribí cualquier mensaje **en el grupo**.
-3. Abrí la misma dirección `getUpdates` y buscá el `id` del chat cuyo `"type"` sea
-   `"group"` o `"supergroup"`.
-4. El id de un grupo es **negativo** y suele empezar con `-100`
-   (ej: `-1001234567890`). Copialo entero, con el signo menos.
+(Si preferís hacer los pedidos desde un grupo, agregá el bot al grupo, escribí algo ahí y
+buscá en `getUpdates` el id del chat cuyo `"type"` sea `"group"` o `"supergroup"`. El id
+de un grupo es **negativo**, ej: `-1001234567890`.)
 
 > 📸 *Sacar acá una captura del resultado de `getUpdates` (tapando el token) para el
 > entregable.*
 
+### 2.3 — Crear el grupo donde el robot escribe la lista
+
+1. En Telegram: **Nuevo grupo**. Agregá al bot como integrante (Telegram pide al menos
+   uno) y a quien tenga que recibir la lista.
+2. Anotá el **nombre exacto** del grupo, con mayúsculas, tildes y espacios. El robot lo
+   escribe en el buscador de Telegram Web para encontrarlo.
+
 ---
 
-## Paso 3 — Descargar el proyecto y configurarlo
+## Paso 3 — Configurar el proyecto
 
-1. Cloná o descargá este repositorio.
-
-2. En la carpeta raíz del proyecto vas a encontrar `config.ejemplo.txt`.
+1. En la carpeta raíz del proyecto vas a encontrar `config.ejemplo.txt`.
    **Copialo y renombrá la copia como `config.txt`**, en la misma carpeta.
 
    ```bash
@@ -151,10 +127,11 @@ vos antes, o el envío va a fallar con `chat not found`.
    copy config.ejemplo.txt config.txt
    ```
 
-3. Abrí `config.txt` con cualquier editor de texto y completá tus datos:
+2. Abrí `config.txt` con cualquier editor de texto y completá tus datos:
    ```
    TELEGRAM_TOKEN=1234567890:AAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    TELEGRAM_CHAT_ID=1234567890
+   GRUPO_TELEGRAM=Lista de Compras
    ```
    Sin espacios alrededor del `=` y sin comillas.
 
@@ -165,31 +142,55 @@ vos antes, o el envío va a fallar con `chat not found`.
 
 ---
 
-## Paso 4 — Verificar que quedó todo bien
+## Paso 4 — Verificar el token
 
-Parado en la carpeta raíz del proyecto, corré la prueba de conexión.
+Parado en la carpeta `Ejecutables`, corré la prueba de conexión.
 **Esta prueba no le manda un mensaje a nadie**, solo comprueba que el token sirva:
 
 ```
-tagui pruebas/prueba_conexion.tag -n
+py prueba_conexion.py
 ```
+(en Linux: `python3 prueba_conexion.py`)
 
 Tiene que responder algo así:
 
 ```
-OK - el token es valido. Bot: @ComprasGrupo13_bot
+OK - el token es válido. Bot: @ComprasGrupo13_bot
 ```
 
-Después probá un envío real:
+---
+
+## Paso 5 — Iniciar sesión en Telegram Web (una sola vez)
+
+El robot escribe desde **tu cuenta de Telegram**, usando Telegram Web en un Chrome
+propio de TagUI (separado de tu Chrome de todos los días). Hay que iniciar sesión una vez:
+
+1. Parado en `Ejecutables`:
+   ```
+   py robot_telegram_web.py
+   ```
+2. **La primera vez descarga TagUI (~200 MB)**: tarda unos minutos y no muestra progreso.
+3. Se abre Chrome con Telegram Web y un **código QR**. Escanealo con el celular:
+   Telegram → Ajustes → Dispositivos → Vincular dispositivo.
+4. En la terminal tiene que aparecer `OK - hay sesión iniciada en Telegram Web.`
+
+La sesión queda guardada: las próximas veces entra directo.
+
+> **Si Chrome se abre y no pasa nada:** cortá con `Ctrl+C` y corré el comando de nuevo.
+> Pasa la primera vez: al estrenar el perfil, Chrome le cierra a TagUI la pestaña que
+> iba a manejar.
+
+Para probar un envío real sin molestar a nadie, mandate un mensaje a vos mismo:
 
 ```
-tagui pruebas/prueba_telegram.tag -n
+py robot_telegram_web.py "Saved Messages"
 ```
 
-Te va a preguntar el chat_id (Enter para usar el de `config.txt`) y el texto.
-Si te llega el mensaje a Telegram, la instalación está terminada.
+(Si tu Telegram Web está en castellano, el chat se llama `"Mensajes guardados"`.)
+Si te llega un mensaje de 3 líneas a tus mensajes guardados, la instalación está
+terminada.
 
-> 📸 *Sacar acá una captura del mensaje llegando a Telegram para el entregable.*
+> 📸 *Sacar acá una captura del robot escribiendo en Telegram Web para el entregable.*
 
 ---
 
@@ -197,10 +198,11 @@ Si te llega el mensaje a Telegram, la instalación está terminada.
 
 | Qué ves | Qué pasa |
 |---|---|
-| `tagui` no se reconoce como comando | TagUI no quedó en el PATH, o no cerraste y volviste a abrir la terminal después de agregarlo. |
+| `py` / `python` no se reconoce como comando | Python no quedó en el PATH. Reinstalalo tildando "Add python.exe to PATH" y abrí una terminal nueva. |
+| `No module named 'rpa'` o `'requests'` | Faltó el `pip install -r requirements.txt` del Paso 1. |
+| `No existe config.txt` / `Faltan valores en config.txt` | Falta el Paso 3, o `config.txt` no tiene alguna de las 3 líneas. |
 | `Unauthorized` en la prueba de conexión | El token de `config.txt` está mal copiado, o lo revocaste en BotFather. Copialo entero, incluyendo la parte antes de los dos puntos. |
-| `chat not found` al enviar | El chat_id está mal, **o nunca le hablaste al bot**. Mandale un mensaje al bot y volvé a sacar el chat_id con `getUpdates`. |
-| La respuesta de Telegram viene vacía `[]` | Se borró de algún `.tag` la línea de comentario que contiene el texto `api http`. Está explicado en [`contexto.md`](../contexto.md) y en el encabezado de cada script: esa línea es obligatoria. |
-| Se abre una ventana de Chrome con un cartelito preguntando | Ejecutaste sin el flag `-n`. Agregalo, o usá los lanzadores `compras.cmd` / `compras.sh`. |
-| `cannot find file ../data/...` | Se movió un archivo de lugar. TagUI resuelve las rutas relativas **respecto de dónde está el `.tag`**, no desde dónde ejecutás. Los scripts esperan la estructura de carpetas original. |
-| (Linux) errores raros de PHP o de parseo | Falta instalar `php-cli`. Ver el Paso 1. |
+| Chrome se abre y no pasa nada | Ver el recuadro del Paso 5: `Ctrl+C` y correrlo de nuevo. |
+| Telegram Web queda en blanco | La PC estaba bloqueada. Con la sesión de Windows bloqueada, Chrome no dibuja las páginas. |
+| `no encontré el chat «...»` | El nombre del chat no coincide exacto, o no es un chat tuyo. Por seguridad, el robot solo elige entre tus chats: nunca entre los resultados de la búsqueda global. |
+| (Linux) errores raros de PHP | Falta instalar `php-cli`. Ver el Paso 1. |
