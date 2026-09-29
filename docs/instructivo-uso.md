@@ -153,13 +153,13 @@ Por ejemplo, con los datos de ejemplo y "Milanesas con pure", al grupo le llega:
 ```
 Lista de compras:
 - Carne nalga: 0.5 kg
+- Papa: 1 kg
 - Pan rallado: 0.1 kg
 ```
 
-Fijate que la Papa y el Huevo que llevan las milanesas **no aparecen**, y que de pan
-rallado pide 0.1 kg en vez de los 0.2 kg que lleva la receta: es porque
-`StockActual.csv` dice que en casa ya hay papa y huevos suficientes, y 0.1 kg de pan
-rallado.
+Fijate que el Huevo que llevan las milanesas **no aparece**, y que de pan rallado pide
+0.1 kg en vez de los 0.2 kg que lleva la receta: es porque `StockActual.csv` dice que
+en casa ya hay 6 huevos (alcanzan para los 2 de la receta) y 0.1 kg de pan rallado.
 
 Si el robot no puede mandar la lista por Telegram Web (no hay sesión, no encuentra el
 grupo, se colgó), **el bot te la manda él mismo** junto con el motivo, así la lista no
@@ -216,7 +216,7 @@ Cada comida tiene que existir en `BaseDatos.csv`. Si no existe, el bot **no se r
 calcula el resto y te avisa:
 
 ```
-⚠ No tienen receta cargada en BaseDatos.csv (no se cuentan): Empanadas
+⚠ No tienen receta cargada en BaseDatos.csv (no se cuentan): Guiso de mondongo
 ```
 
 (Para mostrar esto en la demo, cambiá a mano en `Menu.csv` una comida por otra que no

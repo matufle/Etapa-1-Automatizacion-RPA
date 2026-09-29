@@ -2,7 +2,7 @@
 # El cálculo de la lista de compras: qué ingredientes llevan las comidas
 # elegidas, cuánto hay ya en la alacena y cuánto falta comprar.
 #
-# Es la misma lógica que tenía version-1-tagui/compras.tag, pasada a Python.
+# Es la misma lógica que se lleva en bot.py, pero separada en un módulo aparte para poder testearla sin tener que levantar el bot.
 # Los CSV se leen como texto con el módulo csv de Python: no hace falta tener
 # Excel ni ningún otro programa instalado, y anda igual en Windows y Linux.
 
@@ -14,11 +14,16 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 CARPETA_DATOS = RAIZ / "data"
 
-
+# ==================================================================
+# EXCEPCIONES
 class ErrorDeDatos(Exception):
     """Un CSV tiene algo que no se puede interpretar (ej: una cantidad con letras)."""
 
-
+# ==================================================================
+# FUNCIONES DE LECTURA Y ESCRITURA DE CSV
+#esta funcion lee un archivo csv y devuelve una lista de listas, donde cada sublista es una fila del archivo. 
+# Se saltea la fila de encabezados y las filas vacías. Además, se eliminan los espacios en blanco al principio 
+# y al final de cada campo.
 def _leer_csv(nombre):
     ruta = CARPETA_DATOS / nombre
     with open(ruta, encoding="utf-8-sig", newline="") as archivo:
@@ -26,7 +31,9 @@ def _leer_csv(nombre):
         filas = list(csv.reader(archivo))[1:]
     return [[campo.strip() for campo in fila] for fila in filas if any(fila)]
 
-
+#esta funcion convierte un texto en un número flotante. Si el texto no se puede convertir, 
+# lanza una excepción ErrorDeDatos con un mensaje de error que indica el archivo y la fila 
+# donde ocurrió el error.
 def _a_numero(texto, archivo, numero_fila):
     try:
         return float(texto)
@@ -38,7 +45,7 @@ def _a_numero(texto, archivo, numero_fila):
             "(usá punto para los decimales, ej: 0.5)"
         )
 
-
+#esta funcion devuelve una lista de comidas distintas que hay en la base de recetas, en el orden del CSV.
 def comidas_disponibles():
     """Las comidas distintas que hay en la base de recetas, en el orden del CSV."""
     comidas = []

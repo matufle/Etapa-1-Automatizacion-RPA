@@ -4,8 +4,8 @@
 # config.txt está en .gitignore porque tiene el token del bot: cada integrante
 # del grupo se arma el suyo a partir de config.ejemplo.txt.
 #
-# A diferencia de la versión en TagUI (version-1-tagui/), acá el parseo está una
-# sola vez: Python sí permite importar código entre archivos.
+# Lo usan bot.py y prueba_conexion.py: la lectura está escrita una sola vez,
+# acá, y los demás archivos la importan.
 
 from pathlib import Path
 

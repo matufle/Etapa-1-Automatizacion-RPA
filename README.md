@@ -38,6 +38,7 @@ iniciaste sesión en Telegram Web. Si no, andá primero al
    ```
    py prueba_conexion.py
    ```
+   (en Linux: `python3 prueba_conexion.py`)
 3. Prendé el bot:
    - **Windows:** doble click en `Ejecutables\iniciar_bot.cmd`
    - **Linux / macOS:** `./Ejecutables/iniciar_bot.sh`
@@ -64,19 +65,21 @@ iniciaste sesión en Telegram Web. Si no, andá primero al
 | `config.txt` | Tu token, tu chat_id y el nombre del grupo. **No se sube al repositorio** (está en `.gitignore`): cada integrante del grupo se arma el suyo. |
 | `config.ejemplo.txt` | La plantilla de `config.txt`, con las instrucciones adentro. Esta sí se sube. |
 | `mensaje.txt` / `captura.png` | Se regeneran solos en cada pedido: la última lista y la captura de Telegram Web. Quedan como evidencia local. |
-| `version-1-tagui/` | La **primera versión** del proyecto, escrita directamente en TagUI (menú por consola y envío por la Bot API). Queda como registro para la cronología de la exposición. |
-| `docs/evidencia/` | Material del intento fallido por WhatsApp y capturas de errores, guardado para la exposición. |
+| `docs/evidencia/` | Material del intento por WhatsApp y capturas de errores, guardado para la exposición. |
+| `docs/explicaciones-archivos/` | Una explicación detallada de cada archivo de código: qué hace cada parte y cada función. |
 
 ## Documentación
 
 | Documento | Para qué |
 |---|---|
+| [Documentación del proyecto](docs/documentacion-del-proyecto.md) | **Lo que pide la consigna del TPI:** herramienta elegida y por qué, definición del proceso (alcance, restricciones, controles), los 3 conceptos teóricos, cronología, riesgos y la mejora propuesta para la Etapa 2. |
 | [Instructivo de instalación](docs/instructivo-instalacion.md) | Poner esto a andar desde cero: Python, Chrome, librerías, bot de Telegram, grupo, `config.txt` e inicio de sesión en Telegram Web. |
 | [Instructivo de uso](docs/instructivo-uso.md) | Usarlo en el día a día: los botones, cómo cargar tus propias comidas, qué hacer cuando algo falla. |
+| [Explicación de los archivos](docs/explicaciones-archivos/) | Qué hace cada parte del código, archivo por archivo. |
 | [Contexto del proyecto](contexto.md) | El estado del trabajo: qué decisiones se tomaron y por qué, qué contratiempos hubo, qué falta hacer. Es el documento para retomar el proyecto. |
 
 ## Grupo 13
 
 Barreto Martin · Carmona Julian · Casagrande Joaquin · Flegler Mateo · Graciani Juan Pablo · Joannas Damián
 
-Docentes: JAIME ELIEZER PIPERNO SZTERNFELD  y MAURO SANDER DIMURO.
+Docentes: Jaime Eliezer Piperno Szternfeld y Mauro Sander Dimuro.

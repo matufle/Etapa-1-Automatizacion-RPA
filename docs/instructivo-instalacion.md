@@ -55,6 +55,11 @@ archivos `.csv` como texto plano, justamente para que funcione igual en cualquie
    ```bash
    python3 -m pip install -r requirements.txt
    ```
+   Si pip se niega con el error `externally-managed-environment` (pasa en Ubuntu 23.04
+   o más nuevo y en Debian 12), agregale `--break-system-packages`:
+   ```bash
+   python3 -m pip install --user --break-system-packages -r requirements.txt
+   ```
 
 > **Nota honesta:** la instalación en Linux **todavía no se probó** en este proyecto
 > (está pendiente en el checklist de [`contexto.md`](../contexto.md)). Los pasos salen de
@@ -206,3 +211,5 @@ terminada.
 | Telegram Web queda en blanco | La PC estaba bloqueada. Con la sesión de Windows bloqueada, Chrome no dibuja las páginas. |
 | `no encontré el chat «...»` | El nombre del chat no coincide exacto, o no es un chat tuyo. Por seguridad, el robot solo elige entre tus chats: nunca entre los resultados de la búsqueda global. |
 | (Linux) errores raros de PHP | Falta instalar `php-cli`. Ver el Paso 1. |
+| (Linux) `externally-managed-environment` al instalar | Ver el Paso 1: agregar `--user --break-system-packages` al `pip install`. |
+| (Linux) `Permission denied` al correr `iniciar_bot.sh` | El archivo perdió el permiso de ejecución. Corré `chmod +x Ejecutables/iniciar_bot.sh`, o prendelo con `sh Ejecutables/iniciar_bot.sh`. |

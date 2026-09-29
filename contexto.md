@@ -19,7 +19,7 @@ No repite lo que ya está en otro lado:
 - Trabajo Práctico Integrador (TPI), grupal, combina Microcontroladores + RPA.
 - **Grupo 13:** Barreto Martin, Carmona Julian, Casagrande Joaquin, Flegler Mateo,
   Graciani Juan Pablo, Joannas Damián.
-- **Docentes:** Ulises Rapallini y Ernesto Ledesma.
+- **Docentes:** Jaime Eliezer Piperno Szternfeld y Mauro Sander Dimuro.
 - **Etapa 1** (la actual): al grupo 13 le toca RPA. El grupo emparejado hace
   Microcontroladores/ESP32 y tiene integrantes en Windows y en Linux.
   Entrega **30/09/2026**, exposiciones 01/10, 06/10, 08/10 o 13/10.
@@ -44,7 +44,7 @@ RPA si se usa como **disparador de un proceso local** (probablemente en Python) 
 escritorio) y **devuelva un resultado**. Un bot de Telegram sin esa parte local no
 entra en la definición de RPA vista en clase.
 
-La versión 1 (hoy en `version-1-tagui/`) no cumplía bien: se disparaba desde un menú
+La versión 1 (un script de TagUI puro, que ya no forma parte del entregable) no cumplía bien: se disparaba desde un menú
 por consola, corría con `-n` (sin navegador) y Telegram era solo la salida. Por eso se
 pasó a la versión 2:
 
@@ -144,7 +144,7 @@ El mensaje ahora incluye la unidad. Antes decía `Papa: 1`, sin aclarar si era 1
 ### 2.6 — Un solo archivo por flujo en la versión 1 (no fue descuido)
 
 **TagUI no tiene ningún mecanismo de `include` / `import` entre archivos `.tag`**
-(verificado leyendo el parser de la herramienta). Por eso en `version-1-tagui/` el
+(verificado leyendo el parser de la herramienta). Por eso en la versión 1 el
 bloque que lee `config.txt` está **duplicado** en los tres scripts. En la versión 2,
 Python sí permite importar, así que está una sola vez (`configuracion.py`).
 
@@ -166,7 +166,7 @@ del grupo se arma su propio `config.txt`.
 ## 3. El contratiempo grande de la versión 1: el envío por Telegram
 
 Vale la pena contarlo en la exposición, porque la causa raíz se encontró leyendo el
-código fuente de TagUI, no adivinando. (Todo esto aplica a `version-1-tagui/`; en la
+código fuente de TagUI, no adivinando. (Todo esto aplica a la versión 1; en la
 versión 2 los llamados a la Bot API se hacen con la librería `requests` de Python.)
 
 ### Los intentos fallidos
@@ -226,7 +226,7 @@ Y la URL **tiene** que estar en una variable, porque el token viene de `config.t
 `tagui_parse.php:1010`, el paso `telegram` nativo de TagUI genera el comentario
 `// 'api http' to allow API calls` exactamente por este motivo.
 
-Por eso los tres `.tag` del proyecto llevan esa línea con un cartel de **NO BORRAR**.
+Por eso los tres `.tag` de la versión 1 llevaban esa línea con un cartel de **NO BORRAR**.
 
 ### Dato aparte: el paso `telegram` nativo de TagUI
 
@@ -315,7 +315,7 @@ Cosas que costó descubrir y conviene tener anotadas:
 
 ## 5. Estado actual
 
-**Versión 1 (`version-1-tagui/`):** funcionó y se probó de punta a punta en Windows
+**Versión 1 (ya no se entrega; queda en el historial de git):** funcionó y se probó de punta a punta en Windows
 (menú por consola, cálculo, envío por la Bot API).
 
 **Versión 2 — probado en Windows:**
@@ -358,7 +358,8 @@ Repositorio: `https://github.com/matufle/Etapa-1-Automatizacion-RPA.git`
 
 Los tres están marcados con comentarios en MAYÚSCULAS dentro del código, en el punto
 exacto donde ocurren, para poder mostrarlos en la demo: `Ejecutables/compras.py` y
-`Ejecutables/bot.py` (en la versión 1, en `version-1-tagui/compras.tag`).
+`Ejecutables/bot.py`. La explicación completa, pensada para la entrega, está en
+[`docs/documentacion-del-proyecto.md`](docs/documentacion-del-proyecto.md).
 
 | Concepto | Dónde aparece en el bot |
 |---|---|
@@ -404,10 +405,10 @@ exacto donde ocurren, para poder mostrarlos en la demo: `Ejecutables/compras.py`
    versión 2). Falta **sacar las capturas de pantalla**: están marcados los lugares con
    📸 dentro del instructivo de instalación (BotFather, `getUpdates`, el robot
    escribiendo en Telegram Web).
-10. Redactar la mejora sugerida para Etapa 2: módulo de web scraping que calcule el
-    presupuesto total consultando precios en la web de un supermercado local de
-    Concepción del Uruguay. Confirmar con los docentes qué sitio usar como referencia,
-    para que el otro grupo no se trabe en eso.
+10. ~~Redactar la mejora sugerida para Etapa 2.~~ **HECHO** (29/09): actualizar el stock
+    a partir de una foto de la factura de compra, pasándola a texto con una IA web. Está
+    en [`docs/documentacion-del-proyecto.md`](docs/documentacion-del-proyecto.md),
+    sección 7. Reemplaza a la idea anterior de scraping de precios.
 11. Subir todo a GitHub para el resto del grupo. El `.gitignore` ya protege `config.txt`.
     Aclararle al grupo que cada uno se arma el suyo a partir de `config.ejemplo.txt`.
 12. Armar los entregables finales:
@@ -422,5 +423,6 @@ exacto donde ocurren, para poder mostrarlos en la demo: `Ejecutables/compras.py`
 
 ### Mejoras identificadas, fuera del alcance de Etapa 1
 
+- **Mejora elegida para Etapa 2:** cargar la factura por foto (ítem 10).
 - Manejo de presentaciones/envases para las cantidades (sección 2.5).
-- Módulo de scraping de precios para calcular el presupuesto (ítem 10).
+- Módulo de scraping de precios para calcular el presupuesto.
