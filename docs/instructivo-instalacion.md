@@ -61,9 +61,8 @@ archivos `.csv` como texto plano, justamente para que funcione igual en cualquie
    python3 -m pip install --user --break-system-packages -r requirements.txt
    ```
 
-> **Nota honesta:** la instalación en Linux **todavía no se probó** en este proyecto
-> (está pendiente en el checklist de [`contexto.md`](../contexto.md)). Los pasos salen de
-> la documentación de la librería `rpa`, que avisa que en Linux hace falta PHP.
+> **Nota honesta:** la instalación en Linux **todavía no se probó** en este proyecto 
+> . Los pasos salen de la documentación de la librería `rpa`, que avisa que en Linux hace falta PHP.
 > **Cuando alguien lo pruebe en Linux, actualizar esta sección con lo que realmente pasó.**
 
 ---

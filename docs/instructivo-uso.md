@@ -248,9 +248,7 @@ Huevo,6,unidad
 
 > **Limitación conocida:** el bot puede pedirte `0.2 kg de pan rallado`, que tampoco es
 > algo que se compre así (comprás un paquete). Resolverlo bien requeriría agregar una
-> columna de presentación/envase a `BaseDatos.csv`. Está anotado como mejora pendiente
-> en [`contexto.md`](../contexto.md).
-
+> columna de presentación/envase a `BaseDatos.csv`.
 ---
 
 ## Las pruebas

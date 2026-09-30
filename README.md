@@ -76,7 +76,6 @@ iniciaste sesión en Telegram Web. Si no, andá primero al
 | [Instructivo de instalación](docs/instructivo-instalacion.md) | Poner esto a andar desde cero: Python, Chrome, librerías, bot de Telegram, grupo, `config.txt` e inicio de sesión en Telegram Web. |
 | [Instructivo de uso](docs/instructivo-uso.md) | Usarlo en el día a día: los botones, cómo cargar tus propias comidas, qué hacer cuando algo falla. |
 | [Explicación de los archivos](docs/explicaciones-archivos/) | Qué hace cada parte del código, archivo por archivo. |
-| [Contexto del proyecto](contexto.md) | El estado del trabajo: qué decisiones se tomaron y por qué, qué contratiempos hubo, qué falta hacer. Es el documento para retomar el proyecto. |
 
 ## Grupo 13
 
