@@ -1,9 +1,7 @@
-La idea de es archivo es explicar mas a detalle el archivo bot.py.
-# Idea General
+# IDEA GENERAL
 La idea general es que es un bot de telegram que corre en nuestra pc, queda esperando mensajes y cada cierto tiempo hace consulta mediante la API de telegram para ver si hay un mensaje nuevo.
 
-# Explicacion Por Bloques
-# Bloque 1 IMPORST Y CONFIGS #
+# BLOQUE 1 - IMPORTS Y CONFIGS #
 En la primer parte podemos ver que tenemos ciertos imports, la idea es que utilizamos:
 1. *Random*: para sortear un menú semanal al azar.
 2. *subprocess*: para correr el robot como otro programa parte.
